@@ -1,4 +1,5 @@
 const Product = require("../models/productmodel");
+const ErrorHander = require("../utils/errorhander");
 
 // Only admins can access
 
@@ -24,10 +25,7 @@ exports.getProductDetails = async(req,res,next)=>{
     const product = await Product.findById(req.params.id);
 
     if(!product){
-        return res.status(500).json({
-            success:false,
-            message:"product not found"
-        })
+        return next(new ErrorHander("Product Not Found",404))
     }
     res.status(200).json({
         success:true,
@@ -40,10 +38,7 @@ exports.getProductDetails = async(req,res,next)=>{
 exports.updateProduct = async (req,res,next)=>{
     let product = await Product.findById(req.params.id);
     if(!product){
-        return res.status(500).json({
-            success:false,
-            message:"Product not found"
-        })
+        return next(new ErrorHander("Product Not Found",404))
     }
     product = await Product.findByIdAndUpdate(req.params.id,req.body,{
         new:true,
@@ -59,10 +54,7 @@ exports.updateProduct = async (req,res,next)=>{
 exports.deleteProduct = async (req,res,next)=>{
     const product = await Product.findById(req.params.id);
     if(!product){
-        return res.status(500).json({
-            success:false,
-            message:"product not found"
-        })
+        return next(new ErrorHander("Product Not Found",404))
     }
     await product.remove();
     res.status(200).json({
