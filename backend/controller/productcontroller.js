@@ -1,5 +1,6 @@
 const catchasyncerror = require("../middleware/catchasyncerror");
 const Product = require("../models/productmodel");
+const ApiFeatures = require("../utils/apifeatures");
 const ErrorHander = require("../utils/errorhander");
 
 // Only admins can access
@@ -14,8 +15,13 @@ exports.createProduct = catchasyncerror(async(req,res,next)=>{
 // Get all Products
 
 exports.getAllProducts =catchasyncerror( async (req,res)=>{
-
-    const products = await Product.find();
+    const resultPerPage = 5;
+    const productCount = await Product.countDocuments();
+    const apiFeature = new ApiFeatures(Product.find(),req.query)
+    .search()
+    .filter()
+    .pagination(resultPerPage);
+    const products = await apiFeature.query;
     res.status(200).json({
         success: true,
         products
@@ -30,7 +36,8 @@ exports.getProductDetails = catchasyncerror(async(req,res,next)=>{
     }
     res.status(200).json({
         success:true,
-        product
+        product,
+        productCount
     });
 });
 //Update Products

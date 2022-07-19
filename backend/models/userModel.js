@@ -55,9 +55,9 @@ const userSchema = new mongoose.Schema({
   });
 
   // JWT TOKEN
-userSchema.methods.getJWTToken = function () {
-  return jwt.sign({ id: this._id }, process.env.JWT_SECRET {
-    expiresIn: process.env.JWT_EXPIRE,
-  });
-};
+  userSchema.methods.getJWTToken = function () {
+    return jwt.sign({ id: this._id }, process.env.JWT_SECRET, {
+      expiresIn: process.env.JWT_EXPIRE,
+    });
+  };
   module.exports = mongoose.model("User", userSchema); 
